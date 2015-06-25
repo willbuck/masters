@@ -12,7 +12,7 @@ export default Router.extend({
 	renderPage (page, opts = {layout: true}) {
 		if(opts.layout) {
 			page = (
-				<Layout>
+				<Layout me={app.me}>
 					{page}
 				</Layout>
 			)
@@ -24,16 +24,15 @@ export default Router.extend({
 		'': 'home',
 		'repos': 'repos',
 		'login': 'login',
-		'auth/callback?:query': 'authCallback'
+		'logout': 'logout',
+		'auth/callback?:query': 'authCallback'		
 	},
 		
-	home () {
-		console.log('home')
+	home () {		
 		this.renderPage(<HomePage/>, {layout: false})
 	},
 	
-	repos () {
-		console.log('repos')
+	repos () {		
 		this.renderPage(<ReposPage/>)
 	},
 	
@@ -46,15 +45,20 @@ export default Router.extend({
 		
 	},
 	
+	logout () {
+		window.localStorage.clear()
+		window.location = '/'
+	},
+	
 	authCallback (query) {
-		query = qs.parse(query)
-		console.log(query)
+		query = qs.parse(query)		
 		
 		xhr({
 			url: 'https://wbspadeconstruct.herokuapp.com/authenticate/' + query.code,
 			json: true
-		}, (error, request, body) => {
+		}, (error, request, body) => {			
 			app.me.token = body.token
+			this.redirectTo('/repos')
 		})
 	}
 	
