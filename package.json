@@ -1,6 +1,6 @@
 {
-  "name": "labelr",
-  "version": "1.0.0",
+  "name": "wbsite",
+  "version": "0.0.1",
   "dependencies": {
     "ampersand-app": "^1.0.4",
     "ampersand-model": "^5.0.3",
