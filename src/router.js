@@ -3,6 +3,7 @@ import app from 'ampersand-app'
 import Router from 'ampersand-router'
 import HomePage from './pages/home'
 import ReposPage from './pages/repos'
+import RepoDetailPage from './pages/repo-detail'
 import Layout from './layout'
 import React from 'react'
 import qs from 'qs'
@@ -25,6 +26,7 @@ export default Router.extend({
 		'repos': 'repos',
 		'login': 'login',
 		'logout': 'logout',
+		'repo/:owner/:name': 'repoDetail',
 		'auth/callback?:query': 'authCallback'		
 	},
 		
@@ -34,6 +36,13 @@ export default Router.extend({
 	
 	repos () {		
 		this.renderPage(<ReposPage repos={app.me.repos}/>)
+	},
+	
+	repoDetail (owner, name) {
+		const repo = app.me.repos.getByFullName(owner + '/' + name)
+		const labels = app.me.repos.getByFullName(owner + '/' + name)
+		
+		this.renderPage(<RepoDetailPage repo={repo}/>)
 	},
 	
 	login () {
