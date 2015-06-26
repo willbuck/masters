@@ -38,6 +38,13 @@ export default React.createClass({
 		})
 	},
 	
+	onSubmit (event) {
+		event.preventDefault()
+		const {label} = this.props
+		label.update(this.state)
+		label.editing = false	
+	},
+	
 	render () {
 		const {label} = this.props
 		const {color} = this.state	
@@ -48,9 +55,9 @@ export default React.createClass({
 			content = (
 				<form className='label'>
 				  <span className='label-color avatar avatar-small avatar-rounded'>&nbsp;</span>
-				  <input name='name' onChange={this.onNameChange} value={label.name}/>
+				  <input name='name' onChange={this.onNameChange} value={this.state.name}/>
 				  <input name='color' onChange={this.onColorChange} value={cssColor}/>
-				  <button type='submit' className='button button-small'>Save</button>
+				  <button onClick={this.onSubmit} type='submit' className='button button-small'>Save</button>
 				  <button onClick={this.onCancelClick} type='button' className='button button-small button-unstyled'>cancel</button>
 				</form>
 			)
