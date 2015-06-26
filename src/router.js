@@ -4,10 +4,21 @@ import Router from 'ampersand-router'
 import HomePage from './pages/home'
 import ReposPage from './pages/repos'
 import RepoDetailPage from './pages/repo-detail'
+import MessagePage from './pages/message'
 import Layout from './layout'
 import React from 'react'
 import qs from 'qs'
 import xhr from 'xhr'
+
+function requiresAuth(routeHandler) {
+	return function() {
+		if(app.me.token) {
+			this[routeHandler].apply(this, arguments)
+		} else {
+			this.redirectTo('/')
+		}
+	}
+}
 
 export default Router.extend({
 	renderPage (page, opts = {layout: true}) {
@@ -23,12 +34,13 @@ export default Router.extend({
 	
 	routes: {
 		'': 'home',
-		'repos': 'repos',
+		'repos': requiresAuth('repos'),
 		'login': 'login',
 		'logout': 'logout',
-		'repo/:owner/:name': 'repoDetail',
-		'auth/callback?:query': 'authCallback'		
-	},
+		'repo/:owner/:name': requiresAuth('repoDetail'),
+		'auth/callback?:query': 'authCallback',
+		'404': 'fourOhfour'
+	},		
 		
 	home () {		
 		this.renderPage(<HomePage/>, {layout: false})
@@ -58,6 +70,10 @@ export default Router.extend({
 		window.location = '/'
 	},
 	
+	fourOhfour () {
+		this.renderPage(<MessagePage title='Not Found' body='move along people, nothing to see here'/>)
+	},
+	
 	authCallback (query) {
 		query = qs.parse(query)		
 		
@@ -68,6 +84,8 @@ export default Router.extend({
 			app.me.token = body.token
 			this.redirectTo('/repos')
 		})
+		
+		this.renderPage(<MessagePage title='Fetchin yo datas...'/>)
 	}
 	
 })
