@@ -9,6 +9,7 @@ import Layout from './layout'
 import React from 'react'
 import qs from 'qs'
 import xhr from 'xhr'
+import config from './config'
 
 function requiresAuth(routeHandler) {
 	return function() {
